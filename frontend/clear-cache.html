@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache</title>
+</head>
+<body>
+    <h1>Clearing all cached data...</h1>
+    <script>
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('coachProfile');
+        localStorage.removeItem('coachingBias');
+        localStorage.removeItem('teamState');
+        localStorage.removeItem('playerProfiles');
+        localStorage.removeItem('recruitingState');
+        alert('All cached data cleared! Redirecting to login...');
+        window.location.href = '/login';
+    </script>
+</body>
+</html>
+

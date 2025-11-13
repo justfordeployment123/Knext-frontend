@@ -1,0 +1,315 @@
+.coach-k-bubble {
+  position: fixed;
+  bottom: 80px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  background-color: #000000;
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.5);
+  z-index: 9999;
+  transition: all 150ms ease;
+  animation: pulseGlow 2s infinite;
+}
+
+.coach-k-bubble:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.7);
+  border-color: #D4AF37;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 4px 24px rgba(212, 175, 55, 0.8);
+  }
+}
+
+.coach-k-assistant {
+  position: fixed;
+  bottom: 80px;
+  right: 32px;
+  width: 30%;
+  min-width: 320px;
+  max-width: 400px;
+  max-height: calc(100vh - 200px);
+  background-color: #000000;
+  border: 2px solid #D4AF37;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 300ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.coach-k-header {
+  padding: 16px;
+  border-bottom: 1px solid #333333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000000;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.coach-k-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.minimize-btn,
+.close-btn {
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+  border: 1px solid #333333;
+  color: #FFFFFF;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.minimize-btn:hover,
+.close-btn:hover {
+  background-color: #D4AF37;
+  color: #000000;
+  border-color: #D4AF37;
+}
+
+.coach-k-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  max-height: 400px;
+  min-height: 200px;
+}
+
+.chat-message {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  animation: messageSlide 200ms ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.chat-message.info,
+.chat-message.success {
+  background-color: rgba(212, 175, 55, 0.1);
+  border-left: 3px solid #D4AF37;
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.chat-message.user {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #333333;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-message.warning {
+  background-color: rgba(255, 77, 77, 0.1);
+  border-left: 3px solid #FF4D4D;
+}
+
+.message-speaker {
+  font-size: 12px;
+  font-weight: 600;
+  color: #D4AF37;
+  margin-bottom: 4px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.chat-message.user .message-speaker {
+  color: #FFFFFF;
+}
+
+.message-content {
+  font-size: 14px;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background-color: #D4AF37;
+  border-radius: 50%;
+  animation: typingBlink 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBlink {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.coach-k-actions {
+  padding: 12px 16px;
+  border-top: 1px solid #333333;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #D4AF37;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.action-btn:hover {
+  background-color: #E5C04A;
+  transform: scale(1.02);
+}
+
+.action-btn.secondary {
+  background-color: transparent;
+  border: 1px solid #D4AF37;
+  color: #D4AF37;
+}
+
+.action-btn.secondary:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+}
+
+.coach-k-input {
+  padding: 16px;
+  border-top: 1px solid #333333;
+  display: flex;
+  gap: 8px;
+}
+
+.coach-k-input input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #111111;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.coach-k-input input:focus {
+  outline: none;
+  border-color: #D4AF37;
+}
+
+.coach-k-input input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.coach-k-input button {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #D4AF37;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.coach-k-input button:hover {
+  background-color: #E5C04A;
+}
+
+@media (max-width: 768px) {
+  .coach-k-assistant {
+    width: calc(100% - 32px);
+    bottom: 80px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+  }
+
+  .coach-k-bubble {
+    bottom: 80px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+}

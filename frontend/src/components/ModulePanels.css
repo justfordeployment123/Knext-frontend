@@ -1,0 +1,82 @@
+.module-panels {
+  width: 100%;
+  max-width: 1200px;
+  padding: 48px 32px;
+  margin: 0 auto;
+}
+
+.panels-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.module-panel {
+  background-color: #000000;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.module-panel:hover,
+.module-panel.hovered {
+  border-color: #D4AF37;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.module-icon {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.module-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.module-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.module-system-summary {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #333333;
+  font-size: 12px;
+  color: #D4AF37;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .panels-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .module-panel {
+    padding: 32px 24px;
+  }
+}
+

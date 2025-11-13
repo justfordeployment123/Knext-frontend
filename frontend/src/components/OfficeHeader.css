@@ -1,0 +1,194 @@
+.office-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #000000;
+  z-index: 1000;
+  border-bottom: 1px solid #D4AF37;
+}
+
+.header-layer-1 {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid #333333;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo {
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.logo-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.logo:hover .logo-text {
+  color: #D4AF37;
+}
+
+.active-module {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  padding-left: 24px;
+  border-left: 1px solid #333333;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header-center {
+  display: flex;
+  gap: 32px;
+}
+
+.quick-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  background: transparent;
+  color: #FFFFFF;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 150ms ease;
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.quick-tab:hover {
+  color: #D4AF37;
+}
+
+.quick-tab.active {
+  color: #D4AF37;
+  border-bottom-color: #D4AF37;
+}
+
+.quick-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #D4AF37;
+}
+
+.header-right {
+  display: flex;
+  gap: 16px;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 150ms ease;
+  color: #FFFFFF;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.icon-btn:hover {
+  background-color: rgba(212, 175, 55, 0.2);
+  color: #D4AF37;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 77, 77, 0.2);
+  color: #FF4D4D;
+}
+
+.header-layer-2 {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #000000;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.context-item {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 400;
+  transition: color 150ms ease;
+}
+
+.context-item.clickable {
+  cursor: pointer;
+}
+
+.context-item.clickable:hover {
+  color: #D4AF37;
+}
+
+.context-divider {
+  color: #D4AF37;
+  margin: 0 4px;
+}
+
+@media (max-width: 1024px) {
+  .header-center {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .office-header {
+    height: 96px;
+  }
+
+  .header-layer-1 {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .header-layer-2 {
+    height: 32px;
+    font-size: 12px;
+    padding: 0 16px;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .active-module {
+    display: none;
+  }
+
+  .icon-btn {
+    font-size: 16px;
+    padding: 6px;
+  }
+
+  .header-center {
+    display: none;
+  }
+}
+
