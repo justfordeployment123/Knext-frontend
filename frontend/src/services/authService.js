@@ -1,18 +1,12 @@
 /**
- * Authentication Service
- * Handles JWT token management and authentication API calls
+ * Authentication Service - Frontend Only
+ * Handles JWT token management using localStorage
+ * No backend API calls - all authentication is client-side
  */
 
-// Use relative URL in production (Docker), absolute in development
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001/api');
-
-// Always use real API - no mock fallback
-const USE_REAL_API = true;
-
 /**
- * Generate a simple mock JWT token for demo mode (when backend is unavailable)
- * This is a basic implementation for frontend-only deployments
+ * Generate a JWT token for frontend-only authentication
+ * All authentication is handled client-side using localStorage
  */
 const generateMockToken = (userData) => {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -31,18 +25,10 @@ const generateMockToken = (userData) => {
   return `${header}.${payload}.${signature}`;
 };
 
-/**
- * Check if response is HTML (backend not available)
- */
-const isHTMLResponse = (response) => {
-  const contentType = response.headers.get('content-type');
-  return contentType && contentType.includes('text/html');
-};
 
 /**
  * Decode JWT token
- * For real JWT tokens from backend, this just extracts the payload
- * Backend verifies the signature
+ * Extracts the payload from the token
  */
 const decodeToken = (token) => {
   try {
@@ -50,7 +36,7 @@ const decodeToken = (token) => {
     if (parts.length !== 3) return null;
     const payload = JSON.parse(atob(parts[1]));
     
-    // If token has userId (from backend), map it to user structure
+    // If token has userId, map it to user structure
     if (payload.userId) {
       return {
         user: {
@@ -177,110 +163,24 @@ export const isAuthenticated = () => {
  * @returns {Promise<{success: boolean, token?: string, user?: object, error?: string}>}
  */
 export const login = async (email, password) => {
-  try {
-    // Real API call
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-
-    // Check if response is HTML (backend not available - frontend-only mode)
-    if (isHTMLResponse(response)) {
-      // Fallback to demo mode - allow any email/password for demo
-      const mockUser = {
-        id: Date.now().toString(),
-        email: email,
-        fullName: email.split('@')[0] || 'Demo User',
-        teamName: 'Demo Team',
-        division: 'D1',
-        offensiveSystem: 'Motion',
-        defensiveSystem: 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-
-    // Handle network errors
-    if (!response.ok && response.status === 0) {
-      throw new Error('Cannot connect to backend server.');
-    }
-
-    const data = await response.json();
-
-    if (data.success && data.token) {
-      setToken(data.token);
-      return {
-        success: true,
-        token: data.token,
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-          fullName: data.user.fullName,
-          teamName: data.user.teamName,
-          division: data.user.division,
-          offensiveSystem: data.user.offensiveSystem,
-          defensiveSystem: data.user.defensiveSystem
-        }
-      };
-    } else {
-      return {
-        success: false,
-        error: data.error || 'Login failed. Please try again.'
-      };
-    }
-  } catch (error) {
-    // Check if it's a JSON parse error (HTML response)
-    if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
-      // Fallback to demo mode
-      const mockUser = {
-        id: Date.now().toString(),
-        email: email,
-        fullName: email.split('@')[0] || 'Demo User',
-        teamName: 'Demo Team',
-        division: 'D1',
-        offensiveSystem: 'Motion',
-        defensiveSystem: 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-    
-    // Check if it's a network error
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      // Fallback to demo mode for network errors too
-      const mockUser = {
-        id: Date.now().toString(),
-        email: email,
-        fullName: email.split('@')[0] || 'Demo User',
-        teamName: 'Demo Team',
-        division: 'D1',
-        offensiveSystem: 'Motion',
-        defensiveSystem: 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-    return {
-      success: false,
-      error: error.message || 'Login failed. Please try again.'
-    };
-  }
+  // Frontend-only authentication - no backend API calls
+  // Allow any email/password for demo purposes
+  const user = {
+    id: Date.now().toString(),
+    email: email,
+    fullName: email.split('@')[0] || 'Demo User',
+    teamName: 'Demo Team',
+    division: 'D1',
+    offensiveSystem: 'Motion',
+    defensiveSystem: 'Man-to-Man'
+  };
+  const token = generateMockToken(user);
+  setToken(token);
+  return {
+    success: true,
+    token: token,
+    user: user
+  };
 };
 
 /**
@@ -289,110 +189,23 @@ export const login = async (email, password) => {
  * @returns {Promise<{success: boolean, token?: string, user?: object, error?: string}>}
  */
 export const register = async (userData) => {
-  try {
-    // Real API call
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
-    });
-
-    // Check if response is HTML (backend not available - frontend-only mode)
-    if (isHTMLResponse(response)) {
-      // Fallback to demo mode
-      const mockUser = {
-        id: Date.now().toString(),
-        email: userData.email,
-        fullName: userData.fullName || userData.email.split('@')[0],
-        teamName: userData.teamName || 'Demo Team',
-        division: userData.division || 'D1',
-        offensiveSystem: userData.offensiveSystem || 'Motion',
-        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-
-    // Handle network errors
-    if (!response.ok && response.status === 0) {
-      throw new Error('Cannot connect to backend server.');
-    }
-
-    const data = await response.json();
-
-    if (data.success && data.token) {
-      setToken(data.token);
-      return {
-        success: true,
-        token: data.token,
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-          fullName: data.user.fullName,
-          teamName: data.user.teamName,
-          division: data.user.division,
-          offensiveSystem: data.user.offensiveSystem,
-          defensiveSystem: data.user.defensiveSystem
-        }
-      };
-    } else {
-      return {
-        success: false,
-        error: data.error || 'Registration failed. Please try again.'
-      };
-    }
-  } catch (error) {
-    // Check if it's a JSON parse error (HTML response)
-    if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
-      // Fallback to demo mode
-      const mockUser = {
-        id: Date.now().toString(),
-        email: userData.email,
-        fullName: userData.fullName || userData.email.split('@')[0],
-        teamName: userData.teamName || 'Demo Team',
-        division: userData.division || 'D1',
-        offensiveSystem: userData.offensiveSystem || 'Motion',
-        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-    
-    // Check if it's a network error
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      // Fallback to demo mode for network errors too
-      const mockUser = {
-        id: Date.now().toString(),
-        email: userData.email,
-        fullName: userData.fullName || userData.email.split('@')[0],
-        teamName: userData.teamName || 'Demo Team',
-        division: userData.division || 'D1',
-        offensiveSystem: userData.offensiveSystem || 'Motion',
-        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
-      };
-      const mockToken = generateMockToken(mockUser);
-      setToken(mockToken);
-      return {
-        success: true,
-        token: mockToken,
-        user: mockUser
-      };
-    }
-    return {
-      success: false,
-      error: error.message || 'Registration failed. Please try again.'
-    };
-  }
+  // Frontend-only authentication - no backend API calls
+  const user = {
+    id: Date.now().toString(),
+    email: userData.email,
+    fullName: userData.fullName || userData.email.split('@')[0],
+    teamName: userData.teamName || 'Demo Team',
+    division: userData.division || 'D1',
+    offensiveSystem: userData.offensiveSystem || 'Motion',
+    defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
+  };
+  const token = generateMockToken(user);
+  setToken(token);
+  return {
+    success: true,
+    token: token,
+    user: user
+  };
 };
 
 /**
@@ -408,48 +221,30 @@ export const logout = () => {
 };
 
 /**
- * Refresh token (if implementing refresh token flow)
- * Note: Token generation is handled by the backend API
+ * Refresh token - Frontend only
+ * Generates a new token with extended expiration
  */
 export const refreshToken = async () => {
-  try {
-    const token = getToken();
-    if (!token) {
-      throw new Error('No token to refresh');
-    }
+  const token = getToken();
+  if (!token) {
+    throw new Error('No token to refresh');
+  }
 
-    // Token refresh should be handled by the backend API
-    // Uncomment and implement when backend refresh endpoint is available
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Token refresh failed');
-    }
-
-    const data = await response.json();
-
-    if (data.success && data.token) {
-      setToken(data.token);
-      return {
-        success: true,
-        token: data.token
-      };
-    } else {
-      throw new Error(data.error || 'Token refresh failed');
-    }
-  } catch (error) {
-    // If refresh endpoint doesn't exist or fails, logout user
+  const user = getCurrentUser();
+  if (!user) {
     logout();
     return {
       success: false,
-      error: error.message || 'Token refresh not available. Please login again.'
+      error: 'Invalid token. Please login again.'
     };
   }
+
+  // Generate new token with extended expiration
+  const newToken = generateMockToken(user);
+  setToken(newToken);
+  return {
+    success: true,
+    token: newToken
+  };
 };
 
