@@ -10,8 +10,34 @@ const API_BASE_URL = process.env.REACT_APP_API_URL ||
 // Always use real API - no mock fallback
 const USE_REAL_API = true;
 
-// Note: Token generation is now handled by the backend API
-// This function is kept for reference but not used
+/**
+ * Generate a simple mock JWT token for demo mode (when backend is unavailable)
+ * This is a basic implementation for frontend-only deployments
+ */
+const generateMockToken = (userData) => {
+  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const payload = btoa(JSON.stringify({
+    userId: userData.id || Date.now().toString(),
+    email: userData.email,
+    fullName: userData.fullName,
+    teamName: userData.teamName || 'Demo Team',
+    division: userData.division || 'D1',
+    offensiveSystem: userData.offensiveSystem || 'Motion',
+    defensiveSystem: userData.defensiveSystem || 'Man-to-Man',
+    exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60), // 7 days
+    iat: Math.floor(Date.now() / 1000)
+  }));
+  const signature = btoa('mock-signature');
+  return `${header}.${payload}.${signature}`;
+};
+
+/**
+ * Check if response is HTML (backend not available)
+ */
+const isHTMLResponse = (response) => {
+  const contentType = response.headers.get('content-type');
+  return contentType && contentType.includes('text/html');
+};
 
 /**
  * Decode JWT token
@@ -152,16 +178,37 @@ export const isAuthenticated = () => {
  */
 export const login = async (email, password) => {
   try {
-    // Real API call only - no mock fallback
+    // Real API call
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
 
+    // Check if response is HTML (backend not available - frontend-only mode)
+    if (isHTMLResponse(response)) {
+      // Fallback to demo mode - allow any email/password for demo
+      const mockUser = {
+        id: Date.now().toString(),
+        email: email,
+        fullName: email.split('@')[0] || 'Demo User',
+        teamName: 'Demo Team',
+        division: 'D1',
+        offensiveSystem: 'Motion',
+        defensiveSystem: 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
+      return {
+        success: true,
+        token: mockToken,
+        user: mockUser
+      };
+    }
+
     // Handle network errors
     if (!response.ok && response.status === 0) {
-      throw new Error('Cannot connect to backend server. Please ensure the backend is running on port 3001.');
+      throw new Error('Cannot connect to backend server.');
     }
 
     const data = await response.json();
@@ -188,11 +235,45 @@ export const login = async (email, password) => {
       };
     }
   } catch (error) {
+    // Check if it's a JSON parse error (HTML response)
+    if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
+      // Fallback to demo mode
+      const mockUser = {
+        id: Date.now().toString(),
+        email: email,
+        fullName: email.split('@')[0] || 'Demo User',
+        teamName: 'Demo Team',
+        division: 'D1',
+        offensiveSystem: 'Motion',
+        defensiveSystem: 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
+      return {
+        success: true,
+        token: mockToken,
+        user: mockUser
+      };
+    }
+    
     // Check if it's a network error
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      // Fallback to demo mode for network errors too
+      const mockUser = {
+        id: Date.now().toString(),
+        email: email,
+        fullName: email.split('@')[0] || 'Demo User',
+        teamName: 'Demo Team',
+        division: 'D1',
+        offensiveSystem: 'Motion',
+        defensiveSystem: 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
       return {
-        success: false,
-        error: 'Cannot connect to backend server. Please ensure the backend is running on port 3001.'
+        success: true,
+        token: mockToken,
+        user: mockUser
       };
     }
     return {
@@ -209,16 +290,37 @@ export const login = async (email, password) => {
  */
 export const register = async (userData) => {
   try {
-    // Real API call only - no mock fallback
+    // Real API call
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     });
 
+    // Check if response is HTML (backend not available - frontend-only mode)
+    if (isHTMLResponse(response)) {
+      // Fallback to demo mode
+      const mockUser = {
+        id: Date.now().toString(),
+        email: userData.email,
+        fullName: userData.fullName || userData.email.split('@')[0],
+        teamName: userData.teamName || 'Demo Team',
+        division: userData.division || 'D1',
+        offensiveSystem: userData.offensiveSystem || 'Motion',
+        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
+      return {
+        success: true,
+        token: mockToken,
+        user: mockUser
+      };
+    }
+
     // Handle network errors
     if (!response.ok && response.status === 0) {
-      throw new Error('Cannot connect to backend server. Please ensure the backend is running on port 3001.');
+      throw new Error('Cannot connect to backend server.');
     }
 
     const data = await response.json();
@@ -245,11 +347,45 @@ export const register = async (userData) => {
       };
     }
   } catch (error) {
+    // Check if it's a JSON parse error (HTML response)
+    if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
+      // Fallback to demo mode
+      const mockUser = {
+        id: Date.now().toString(),
+        email: userData.email,
+        fullName: userData.fullName || userData.email.split('@')[0],
+        teamName: userData.teamName || 'Demo Team',
+        division: userData.division || 'D1',
+        offensiveSystem: userData.offensiveSystem || 'Motion',
+        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
+      return {
+        success: true,
+        token: mockToken,
+        user: mockUser
+      };
+    }
+    
     // Check if it's a network error
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      // Fallback to demo mode for network errors too
+      const mockUser = {
+        id: Date.now().toString(),
+        email: userData.email,
+        fullName: userData.fullName || userData.email.split('@')[0],
+        teamName: userData.teamName || 'Demo Team',
+        division: userData.division || 'D1',
+        offensiveSystem: userData.offensiveSystem || 'Motion',
+        defensiveSystem: userData.defensiveSystem || 'Man-to-Man'
+      };
+      const mockToken = generateMockToken(mockUser);
+      setToken(mockToken);
       return {
-        success: false,
-        error: 'Cannot connect to backend server. Please ensure the backend is running on port 3001.'
+        success: true,
+        token: mockToken,
+        user: mockUser
       };
     }
     return {

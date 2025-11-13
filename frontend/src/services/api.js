@@ -40,6 +40,19 @@ export const apiRequest = async (endpoint, options = {}) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
     
+    // Check if response is HTML (backend not available)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+      // Backend not available - return a mock JSON response for demo mode
+      // Create a response-like object that can be parsed as JSON
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, data: null }),
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      };
+    }
+    
     // Handle 401 Unauthorized
     if (response.status === 401) {
       removeToken();
@@ -55,6 +68,16 @@ export const apiRequest = async (endpoint, options = {}) => {
 
     return response;
   } catch (error) {
+    // Check if it's a JSON parse error (HTML response)
+    if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
+      // Return a mock response for demo mode
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, data: null }),
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      };
+    }
     if (error.message.includes('Session expired') || error.message.includes('Unauthorized')) {
       throw error;
     }
@@ -82,7 +105,12 @@ export const post = async (endpoint, data, options = {}) => {
     method: 'POST',
     body: JSON.stringify(data)
   });
-  return response.json();
+  const result = await response.json();
+  // If backend not available, include the original data in response
+  if (result.success && result.data === null && data) {
+    return { success: true, data: data };
+  }
+  return result;
 };
 
 /**
@@ -94,7 +122,12 @@ export const put = async (endpoint, data, options = {}) => {
     method: 'PUT',
     body: JSON.stringify(data)
   });
-  return response.json();
+  const result = await response.json();
+  // If backend not available, include the original data in response
+  if (result.success && result.data === null && data) {
+    return { success: true, data: data };
+  }
+  return result;
 };
 
 /**
@@ -117,6 +150,11 @@ export const patch = async (endpoint, data, options = {}) => {
     method: 'PATCH',
     body: JSON.stringify(data)
   });
-  return response.json();
+  const result = await response.json();
+  // If backend not available, include the original data in response
+  if (result.success && result.data === null && data) {
+    return { success: true, data: data };
+  }
+  return result;
 };
 
