@@ -19,6 +19,9 @@ RUN npm run build
 # Production stage - Frontend only
 FROM nginx:alpine
 
+# Install wget for healthcheck
+RUN apk add --no-cache wget
+
 # Copy built frontend files
 COPY --from=frontend-build /app/build /usr/share/nginx/html
 
@@ -26,7 +29,7 @@ COPY --from=frontend-build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 7481 for nginx (matches nginx.conf)
-EXPOSE 3000
+EXPOSE 7481 
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

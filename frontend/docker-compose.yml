@@ -1,22 +1,14 @@
 version: '3.8'
 
 services:
-  app:
+  frontend:
     build: .
     ports:
       - "7481:7481"
-      - "3001:3001"
-    environment:
-      - PORT=3001
-      - JWT_SECRET=${JWT_SECRET:-kanext-iq-super-secret-jwt-key-2024-production-ready-min-32-chars}
-      - FRONTEND_URL=${FRONTEND_URL:-*}
-      - NODE_ENV=production
-    volumes:
-      - ./backend/data:/app/backend/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:7481 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 10s
