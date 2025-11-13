@@ -25,8 +25,7 @@ COPY --from=frontend-build /app/build /usr/share/nginx/html
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80 for nginx
-
+# Expose port 7481 for nginx (matches nginx.conf)
 EXPOSE 3000
 
 # Start nginx
